@@ -4,7 +4,7 @@ module.exports = {
   // 部署应用包时的基本 URL
   publicPath: isProduction ? '/' : '/',
   // 生产环境构建文件的目录
-  outPutDir: 'dist',
+  outputDir: 'dist',
   // 静态资源 (js、css、img、fonts) 的 (相对于 outputDir 的) 目录。
   assetsDir: 'assets/',
   // 生成的 index.html 的输出路径 
@@ -37,23 +37,23 @@ module.exports = {
   // 是否使用包含运行时编译器的 Vue 构建版本
   runtimeCompiler: false,
   // 该对象将会被 webpack-merge 合并入最终的 webpack 配置。
-  configureWebpack: config => {
-    if (process.env.NODE_ENV === 'production') {
-      // 为生产环境修改配置...
-    } else {
-      // 为开发环境修改配置...
-    }
-  },
+  // configureWebpack: config => {
+  //   if (process.env.NODE_ENV === 'production') {
+  //     // 为生产环境修改配置...
+  //   } else {
+  //     // 为开发环境修改配置...
+  //   }
+  // },
   // css配置
   css: {
     // 文件名中的 .module
     modules: false,
     // 是否将组件中的 CSS 提取至一个独立的 CSS 文件中 (而不是动态注入到 JavaScript 中的 inline 代码)
-    extract: !isDev,
+    extract: isProduction,
     // 是否为 CSS 开启 source map
     sourceMap: false,
     // 向 CSS 相关的 loader 传递选项
-    loaderOptions: {}
+    // loaderOptions: {}
   },
   // dev 环境配置
   devServer: {
@@ -67,10 +67,10 @@ module.exports = {
         target: 'http://localhost:3000',
         ws: false,
         changeOrigin: true,
-        pathRewrite: {}
+        // pathRewrite: {}
       }
-    },
+    }
     // 第三方插件选项
-    pluginOptions: {}
+    // pluginOptions: {}
   }
 }
