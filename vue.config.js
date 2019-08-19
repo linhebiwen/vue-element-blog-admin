@@ -63,10 +63,10 @@ module.exports = {
     },
     // 指向开发环境 API 服务器
     proxy: {
-      '/api': {
-        target: 'http://localhost:3000',
+      '/': {
+        target: 'http://localhost:3001',
         ws: false,
-        changeOrigin: true,
+        changeOrigin: true
         // pathRewrite: {}
       }
     }

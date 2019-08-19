@@ -8,12 +8,16 @@
       <el-form ref="form" :model="form">
         <h3 class="title">用户登录</h3>
         <el-form-item>
-          <el-input v-model="form.name" type="text" placeholder="请输入用户名" prefix-icon="el-icon-user"></el-input>
+          <el-input v-model="form.username" type="text" placeholder="请输入用户名" prefix-icon="el-icon-user"></el-input>
         </el-form-item>
         <el-form-item>
           <el-input v-model="form.password" type="password" placeholder="请输入密码" prefix-icon="el-icon-lock"></el-input>
         </el-form-item>
-        <el-checkbox v-model="remember" class="remember">记住我的登录信息</el-checkbox>
+        <el-form-item>
+          <el-input v-model="form.captcha" type="text" placeholder="验证码"></el-input>
+          <img src="/captcha/getCatcha" />
+        </el-form-item>
+        <el-checkbox v-model="autoLogin" class="auto-login">下次自动登录</el-checkbox>
         <el-form-item style="width: 100%">
           <el-button type="primary" style="width: 100%" @click="login" :loading="loading">登录</el-button>
         </el-form-item>
@@ -23,20 +27,28 @@
 </template>
 
 <script>
+import { cryptoMd5 } from '@/util/crypto'
+
 export default {
   data () {
     return {
       form: {
-        name: '',
+        username: '',
         password: ''
       },
-      remember: false,
+      autoLogin: false,
       loading: false
     }
   },
   methods: {
     login () {
       this.loading = true
+      const username = this.form.username
+      const password = this.form.password
+      if (this.autoLogin === true) {
+        const uid = cryptoMd5(username + password)
+        window.sessionStorage.setItem('uid', uid)
+      }
     }
   }
 }
@@ -77,7 +89,7 @@ export default {
       margin-bottom: 20px;
     }
 
-    .remember {
+    .auto-login {
       display: block;
       margin: -12px 0 10px 0;
       color: #fff;
