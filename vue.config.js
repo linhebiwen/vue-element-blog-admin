@@ -72,5 +72,10 @@ module.exports = {
     }
     // 第三方插件选项
     // pluginOptions: {}
-  }
+  },
+  // 编译vue-echarts
+  transpileDependencies: [
+    'vue-echarts',
+    'resize-detector'
+  ]
 }

@@ -26,7 +26,23 @@ instance.interceptors.request.use(config => {
  * 接收到响应后进行一些操作
  */
 instance.interceptors.response.use(response => {
-
+  if (/.*\/verifyUserName.*/.test(response.config.url) || /.*\/verifyUserEmail.*/.test(response.config.url)) {
+    return response.data
+  } else if (response.request.responseType === 'json') {
+    if (response.data.code === 200) {
+      return response.data
+    } else {
+      let err = {
+        config: response.config,
+        request: response.request,
+        header: response.header,
+        response: { data: { status: response.data.code, description: response.data.msg } }
+      }
+      return responseErrorHandler(err)
+    }
+  } else {
+    return response
+  }
 }, responseErrorHandler)
 
 /**
@@ -40,4 +56,9 @@ const responseErrorHandler = error => {
   // 错误提示
   errMsg && errMsg.close()
   errMsg = Message.error(err.description || '')
+  return { data: {}, code: err.code }
 }
+
+window.$get = instance.get
+window.$post = instance.post
+window.$axios = instance

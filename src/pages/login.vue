@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import { cryptoMd5 } from '@/util/crypto'
+import { cryptoMd5 } from '@/utils/crypto'
 
 export default {
   data () {

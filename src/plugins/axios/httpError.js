@@ -50,6 +50,8 @@ const getErrorMessage = error => {
     err.description = (response && 'status' in response && HTTP_ERROR.CUSTOM_ERROR.has(response.status)) ? HTTP_ERROR.CUSTOM_ERROR.get(response.status) : '服务器异常,请稍后重试'
     err.code = response.status
   }
+
+  return err
 }
 
 export default getErrorMessage
