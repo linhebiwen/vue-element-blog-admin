@@ -2,7 +2,7 @@ import Vue from 'vue'
 import App from './App'
 
 // 加载插件
-import '@plugins/axios'
+import '@/plugins/axios'
 import '@/plugins/element-ui'
 import '@/plugins/vue-particles'
 import '@/plugins/echarts'
@@ -15,7 +15,6 @@ import router from '@/router'
 
 // 加载Vuex
 import store from '@/store'
-
 Vue.config.productionTip = false
 
 new Vue({

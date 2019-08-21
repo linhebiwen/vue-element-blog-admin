@@ -2,7 +2,7 @@ import http from 'http'
 import https from 'https'
 
 const baseConfig = {
-  baseURL: '/',
+  baseURL: '/api',
 
   //请求超时设置
   timeout: 30000,

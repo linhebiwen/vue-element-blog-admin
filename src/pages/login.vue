@@ -14,8 +14,9 @@
           <el-input v-model="form.password" type="password" placeholder="请输入密码" prefix-icon="el-icon-lock"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-input v-model="form.captcha" type="text" placeholder="验证码"></el-input>
-          <img src="/captcha/getCatcha" />
+          <el-input v-model="form.captcha" type="text" placeholder="验证码" style="width: 200px; marginRight: 20px">
+          </el-input>
+          <span v-html="svgCaptcha" class="svg-captcha" @click="getCaptcha"></span>
         </el-form-item>
         <el-checkbox v-model="autoLogin" class="auto-login">下次自动登录</el-checkbox>
         <el-form-item style="width: 100%">
@@ -28,18 +29,26 @@
 
 <script>
 import { cryptoMd5 } from '@/utils/crypto'
+import { CAPTCHA_GETCAPTCHA } from '@/api/constant'
 
 export default {
   data () {
     return {
+      svgCaptcha: '',
       form: {
         username: '',
-        password: ''
+        password: '',
+        captcha: ''
       },
       autoLogin: false,
       loading: false
     }
   },
+
+  created () {
+    this.getCaptcha()
+  },
+
   methods: {
     login () {
       this.loading = true
@@ -49,6 +58,12 @@ export default {
         const uid = cryptoMd5(username + password)
         window.sessionStorage.setItem('uid', uid)
       }
+    },
+
+    getCaptcha () {
+      window.$get(CAPTCHA_GETCAPTCHA).then(res => {
+        this.svgCaptcha = res.data
+      })
     }
   }
 }
@@ -71,7 +86,7 @@ export default {
   .login-form {
     position: absolute;
     width: 300px;
-    height: 250px;
+    height: 320px;
     background-color: rgba(0, 0, 0, 0.3);
     border: 1px solid #363636;
     border-radius: 5px;
@@ -80,13 +95,21 @@ export default {
     left: 80%;
     top: 50%;
     transform: translate(-50%, -50%);
-    padding: 30px 20px;
+    padding: 30px 20px 20px 20px;
 
     .title {
       color: #fff;
       text-align: center;
       font-size: 14px;
-      margin-bottom: 20px;
+      margin: 0 0 20px 0;
+      padding: 0;
+    }
+
+    .svg-captcha {
+      vertical-align: middle;
+      display: inline-block;
+      height: 40px;
+      width: 80px;
     }
 
     .auto-login {

@@ -21,6 +21,21 @@ instance.interceptors.request.use(config => {
   return config
 }, err => Promise.reject(err))
 
+
+/**
+ * @description: 统一处理响应错误
+ * @param {Object} error
+ * @return: 
+ */
+const responseErrorHandler = error => {
+  // 自定义错误
+  const err = getErrorMessage(error)
+  // 错误提示
+  errMsg && errMsg.close()
+  errMsg = Message.error(err.description || '')
+  return { data: {}, code: err.code }
+}
+
 /**
  * 响应拦截器
  * 接收到响应后进行一些操作
@@ -44,20 +59,6 @@ instance.interceptors.response.use(response => {
     return response
   }
 }, responseErrorHandler)
-
-/**
- * @description: 统一处理响应错误
- * @param {Object} error
- * @return: 
- */
-const responseErrorHandler = error => {
-  // 自定义错误
-  const err = getErrorMessage(error)
-  // 错误提示
-  errMsg && errMsg.close()
-  errMsg = Message.error(err.description || '')
-  return { data: {}, code: err.code }
-}
 
 window.$get = instance.get
 window.$post = instance.post

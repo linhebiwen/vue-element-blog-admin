@@ -39,10 +39,10 @@ const getErrorMessage = error => {
     err.description = '网络异常, 请检查您的网络连接是否正常'
   } else if (typeof response === 'string') {
     err.description = '服务器异常, 请稍后重试'
-  } else if (error.response.status < 600) {
+  } else if (error.response.status >= 400 && error.response.status < 600) {
     // 常规错误
     err.title = error.response.status < 500 ? '请求错误' : '服务器错误'
-    err.description = HTTP_ERROR.HTTP_DEFAULT_ERROR.get(err.response.status)
+    err.description = HTTP_ERROR.HTTP_DEFAULT_ERROR.get(error.response.status)
     err.code = error.response.status
   } else {
     // 自定义错误
