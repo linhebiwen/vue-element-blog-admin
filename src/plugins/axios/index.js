@@ -32,8 +32,8 @@ const responseErrorHandler = error => {
   const err = getErrorMessage(error)
   // 错误提示
   errMsg && errMsg.close()
-  errMsg = Message.error(err.description || '')
-  return { data: {}, code: err.code }
+  errMsg = Message.error(err.msg || '')
+  return { code: err.code, msg: err.msg }
 }
 
 /**
@@ -41,17 +41,15 @@ const responseErrorHandler = error => {
  * 接收到响应后进行一些操作
  */
 instance.interceptors.response.use(response => {
-  if (/.*\/verifyUserName.*/.test(response.config.url) || /.*\/verifyUserEmail.*/.test(response.config.url)) {
-    return response.data
-  } else if (response.request.responseType === 'json') {
-    if (response.data.code === 200) {
+  if (response.request.responseType === 'json') {
+    if (response.data.code === 0) {
       return response.data
     } else {
       let err = {
         config: response.config,
         request: response.request,
         header: response.header,
-        response: { data: { status: response.data.code, description: response.data.msg } }
+        response: { data: { status: response.data.code, msg: response.data.msg } }
       }
       return responseErrorHandler(err)
     }

@@ -7,7 +7,12 @@
 <script>
 export default {
   name: 'app',
-  components: {}
+  mounted () {
+    const script = document.createElement('script')
+    script.type = 'text/javascript'
+    script.src = 'https:////at.alicdn.com/t/font_1391640_glhgavbitgq.js'
+    document.body.appendChild(script)
+  }
 }
 </script>
 

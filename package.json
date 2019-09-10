@@ -12,10 +12,13 @@
     "core-js": "^2.6.5",
     "echarts": "^4.2.1",
     "element-ui": "^2.11.1",
+    "js-cookie": "^2.2.1",
+    "lodash.clonedeep": "^4.5.0",
     "vue": "^2.6.10",
     "vue-echarts": "^4.0.3",
     "vue-particles": "^1.0.9",
-    "vue-router": "^3.1.2",
+    "vue-router": "^3.0.7",
+    "vue2-verify": "^1.1.5",
     "vuex": "^3.1.1"
   },
   "devDependencies": {

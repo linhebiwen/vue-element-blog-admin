@@ -31,23 +31,23 @@ const getErrorMessage = error => {
   const response = error.response ? error.response.data : undefined
   const err = {
     title: '未知错误',
-    description: '系统发生未知错误',
+    msg: '系统发生未知错误',
     code: 500
   }
   if (response === undefined) {
     err.title = '网络异常'
-    err.description = '网络异常, 请检查您的网络连接是否正常'
+    err.msg = '网络异常, 请检查您的网络连接是否正常'
   } else if (typeof response === 'string') {
-    err.description = '服务器异常, 请稍后重试'
+    err.msg = '服务器异常, 请稍后重试'
   } else if (error.response.status >= 400 && error.response.status < 600) {
     // 常规错误
     err.title = error.response.status < 500 ? '请求错误' : '服务器错误'
-    err.description = HTTP_ERROR.HTTP_DEFAULT_ERROR.get(error.response.status)
+    err.msg = HTTP_ERROR.HTTP_DEFAULT_ERROR.get(error.response.status)
     err.code = error.response.status
   } else {
     // 自定义错误
-    err.title = '博客系统错误'
-    err.description = (response && 'status' in response && HTTP_ERROR.CUSTOM_ERROR.has(response.status)) ? HTTP_ERROR.CUSTOM_ERROR.get(response.status) : '服务器异常,请稍后重试'
+    err.title = '自定义错误'
+    err.msg = (response && response.msg) ? response.msg : '服务器异常,请稍后重试'
     err.code = response.status
   }
 
