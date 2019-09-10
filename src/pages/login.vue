@@ -5,18 +5,21 @@
       :hoverEffect="false" hoverMode="grab" :clickEffect="true" clickMode="remove">
     </vue-particles>
     <div class="login-form">
-      <el-form ref="form" :model="form">
+      <el-form ref="form" :model="form" :rules="rules">
         <h3 class="title">用户登录</h3>
-        <el-form-item>
+        <el-form-item prop="username">
           <el-input v-model="form.username" type="text" placeholder="请输入用户名" prefix-icon="el-icon-user"></el-input>
         </el-form-item>
-        <el-form-item>
+        <el-form-item prop="password">
           <el-input v-model="form.password" type="password" placeholder="请输入密码" prefix-icon="el-icon-lock"></el-input>
         </el-form-item>
-        <el-form-item>
-          <el-input v-model="form.captcha" type="text" placeholder="验证码" style="width: 200px; marginRight: 20px">
+        <el-form-item prop="captcha">
+          <el-input v-model="form.captcha" type="text" placeholder="验证码"
+            style="width: 200px; marginRight: 20px; vertical-align: middle;">
           </el-input>
-          <span v-html="svgCaptcha" class="svg-captcha" @click="getCaptcha"></span>
+          <el-button type="text" class="svg-captcha" @click="getCaptcha">
+            <span v-html="svgCaptcha"></span>
+          </el-button>
         </el-form-item>
         <el-checkbox v-model="autoLogin" class="auto-login">下次自动登录</el-checkbox>
         <el-form-item style="width: 100%">
@@ -29,7 +32,8 @@
 
 <script>
 import { cryptoMd5 } from '@/utils/crypto'
-import { CAPTCHA_GETCAPTCHA } from '@/api/constant'
+import { CAPTCHA_GETCAPTCHA, USER_LOGIN } from '@/api/constant'
+import Cookies from 'js-cookie'
 
 export default {
   data () {
@@ -39,6 +43,18 @@ export default {
         username: '',
         password: '',
         captcha: ''
+      },
+      rules: {
+        username: [
+          { required: true, message: '请输入用户名', trigger: 'blur' },
+          { pattern: /^[\u4e00-\u9fa5a-zA-Z0-9]{1,15}$/, message: '中英文数字均可，15字以内', trigger: 'blur' }
+        ],
+        password: [
+          { required: true, message: '请输入密码', trigger: 'blur' }
+        ],
+        captcha: [
+          { required: true, message: '请输入验证码', trigger: 'blur' }
+        ]
       },
       autoLogin: false,
       loading: false
@@ -51,13 +67,31 @@ export default {
 
   methods: {
     login () {
-      this.loading = true
-      const username = this.form.username
-      const password = this.form.password
-      if (this.autoLogin === true) {
-        const uid = cryptoMd5(username + password)
-        window.sessionStorage.setItem('uid', uid)
-      }
+      this.$refs.form.validate(valid => {
+        if (valid) {
+          this.loading = true
+          const password = cryptoMd5(this.form.password)
+          const data = {
+            username: this.form.username,
+            password: password,
+            captcha: this.form.captcha,
+            autoLogin: this.autoLogin
+          }
+          window.$post(USER_LOGIN, data).then(res => {
+            if (res && res.code === 0) {
+              this.$message.success(`欢迎${res.data.username}回家`)
+              window.sessionStorage.setItem('username', res.data.nickname ? res.data.nickname : res.data.username)
+              Cookies.remove('captcha')
+              this.$router.push({ path: '/', name: 'home' })
+            }
+            this.loading = false
+            this.getCaptcha()
+          })
+        } else {
+          this.getCaptcha()
+          this.$message.error('请正确填写表单')
+        }
+      })
     },
 
     getCaptcha () {
@@ -110,11 +144,12 @@ export default {
       display: inline-block;
       height: 40px;
       width: 80px;
+      padding: 0;
     }
 
     .auto-login {
       display: block;
-      margin: -12px 0 10px 0;
+      margin: -5px 0 10px 0;
       color: #fff;
     }
   }
