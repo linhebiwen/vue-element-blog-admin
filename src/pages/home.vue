@@ -9,9 +9,10 @@
       </el-header>
       <el-main>
         <breadcrumb></breadcrumb>
-        <router-view></router-view>
+        <div class="content-wrapper">
+          <router-view></router-view>
+        </div>
       </el-main>
-      <el-footer>Footer</el-footer>
     </el-container>
   </el-container>
 </template>
@@ -20,6 +21,7 @@
 import blogAside from '@/components/aside'
 import blogHeader from '@/components/header'
 import breadcrumb from '@/components/breadcrumb'
+
 import { mapGetters } from 'vuex'
 
 export default {
@@ -46,7 +48,7 @@ export default {
   min-height: 100vh;
 
   .el-header {
-    background-color: #fff;
+    background-color: #f2f6fc;
     color: #333;
     height: 50px;
     line-height: 50px;
@@ -64,11 +66,15 @@ export default {
   }
 
   .el-main {
-    background-color: #f2f6fc;
+    background-color: #ffffff;
     color: #333;
     text-align: center;
     height: 100%;
     padding: 0;
+
+    .content-wrapper {
+      padding: 20px;
+    }
   }
 }
 </style>

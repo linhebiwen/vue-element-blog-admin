@@ -24,3 +24,12 @@ body {
   overflow: hidden;
   padding: 0 4px;
 }
+
+.el-table th {
+  display: table-cell !important;
+}
+
+.el-pagination {
+  text-align: right;
+  margin-top: 20px;
+}

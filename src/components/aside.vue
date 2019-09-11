@@ -3,23 +3,27 @@
     active-text-color="#ffd04b" :collapse="getCollapse" :style="{ width: getSidebar.width }"
     @select="key => $router.push({ path: key })">
     <template v-for="menu in getLeftMenu">
-      <el-submenu v-if="menu.children && menu.children.length > 0" :key="menu.path" :index="menu.path">
-        <template slot="title">
+      <template v-if="!menu.hidden">
+        <el-submenu v-if="menu.mainMenu" :key="menu.path" :index="menu.path">
+          <template slot="title">
+            <svg class="iconfont" aria-hidden="true">
+              <use :xlink:href="`#${menu.meta.icon}`"></use>
+            </svg>
+            <span slot="title">{{ menu.meta.title }}</span>
+          </template>
+          <template v-for="child in menu.children">
+            <el-menu-item v-if="!child.hidden" :key="child.path" :index="`${menu.path}/${child.path}`">
+              {{ child.meta.title }}
+            </el-menu-item>
+          </template>
+        </el-submenu>
+        <el-menu-item v-else :key="menu.children[0].path" :index="`${menu.path}${menu.children[0].path}`">
           <svg class="iconfont" aria-hidden="true">
-            <use :xlink:href="`#${menu.meta.icon}`"></use>
+            <use :xlink:href="`#${menu.children[0].meta.icon}`"></use>
           </svg>
-          <span slot="title">{{ menu.meta.title }}</span>
-        </template>
-        <el-menu-item v-for="child in menu.children" :key="child.path" :index="child.path">
-          {{ child.meta.title }}
+          <span slot="title">{{ menu.children[0].meta.title }}</span>
         </el-menu-item>
-      </el-submenu>
-      <el-menu-item v-else :key="menu.path" :index="menu.path">
-        <svg class="iconfont" aria-hidden="true">
-          <use :xlink:href="`#${menu.meta.icon}`"></use>
-        </svg>
-        <span slot="title">{{ menu.meta.title }}</span>
-      </el-menu-item>
+      </template>
     </template>
   </el-menu>
 </template>
