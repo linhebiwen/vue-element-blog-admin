@@ -1,15 +1,28 @@
 <template>
-  <div>
-    <userSearch @search="condition => getUserList(condition)" @resetPage="page = 1"></userSearch>
-    <el-table :data="userList" border style="width: 100%" :header-cell-style="{ background: '#D4D4D4', color: '#333' }"
-      :row-style="{background:'white',color:'#606266'}" v-loading="loading">
+  <div class="user-wrapper">
+    <el-row>
+      <el-col :span="20">
+        <userSearch @search="condition => getUserList(condition)" @resetPage="page = 1"></userSearch>
+      </el-col>
+      <el-col :span="4" style="text-align: right">
+        <el-button type="primary" size="small" @click="addUser">添加用户</el-button>
+      </el-col>
+    </el-row>
+
+    <el-table
+      :data="userList"
+      border
+      style="width: 100%"
+      :header-cell-style="{ background: '#D4D4D4', color: '#333' }"
+      :row-style="{ background: 'white', color: '#606266' }"
+      v-loading="loading"
+    >
       <el-table-column prop="username" label="用户名" align="center"></el-table-column>
       <el-table-column prop="nickname" label="昵称" align="center"></el-table-column>
       <el-table-column prop="phone" label="手机号" align="center"></el-table-column>
       <el-table-column prop="email" label="邮箱" align="center"></el-table-column>
       <el-table-column prop="birthday" label="生日" align="center" width="170" :formatter="formatTime"></el-table-column>
       <el-table-column prop="sex" label="性别" align="center" :formatter="formatSex"></el-table-column>
-      <el-table-column prop="description" label="描述" align="center"></el-table-column>
       <el-table-column prop="status" label="状态" align="center" :formatter="formatStatus"></el-table-column>
       <el-table-column prop="loginTime" label="最近登录时间" align="center" width="170" :formatter="formatTime">
       </el-table-column>
@@ -32,28 +45,41 @@
       </el-table-column>
     </el-table>
 
-    <el-pagination background layout="total, sizes, prev, pager, next, jumper" :current-page.sync="page" :total="total"
-      :page-sizes="[10, 20, 30]" :page-size="pageSize" @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"></el-pagination>
+    <el-pagination
+      background
+      layout="total, sizes, prev, pager, next, jumper"
+      :current-page.sync="page"
+      :total="total"
+      :page-sizes="[10, 20, 30]"
+      :page-size="pageSize"
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+    >
+    </el-pagination>
+
+    <userMangeDialog :visible="userMangeDialogVisible" @close="userMangeDialogVisible = false"></userMangeDialog>
   </div>
 </template>
 
 <script>
 import userSearch from './userSearch'
+import userMangeDialog from './userManageDialog'
 
 export default {
   components: {
-    userSearch
+    userSearch,
+    userMangeDialog
   },
 
   data () {
     return {
-      loading: false,
+      loading: false,  // 是否在加载中
       userList: [],    // 用户列表
       page: 1,         // 当前页码
       pageSize: 10,     // 每页数量
       total: 0,        // 总数
-      condition: {}    // 查询条件
+      condition: {},    // 查询条件
+      userMangeDialogVisible: false // 是否显示用户添加修改dialog
     }
   },
 
@@ -118,7 +144,12 @@ export default {
 
     // 修改用户信息
     handleEdit () {
+      this.userMangeDialogVisible = true
+    },
 
+    // 添加用户
+    addUser () {
+      this.userMangeDialogVisible = true
     },
 
     handleCurrentChange (page) {
@@ -135,4 +166,8 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.user-top-wrapper {
+  display: flex;
+  justify-content: space-between;
+}
 </style>

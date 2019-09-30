@@ -16,6 +16,8 @@ body {
   visibility: hidden;
 }
 
+// iconfont图标全局样式
+
 .iconfont {
   width: 1.125em;
   height: 1.125em;
@@ -25,6 +27,8 @@ body {
   padding: 0 4px;
 }
 
+// element-ui 全局样式
+
 .el-table th {
   display: table-cell !important;
 }
@@ -32,4 +36,25 @@ body {
 .el-pagination {
   text-align: right;
   margin-top: 20px;
+}
+
+// webkit滚动条全局样式
+
+// 滚动条整体部分，可以设置宽度等
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+// 内层滚动槽
+::-webkit-scrollbar-track-piece {
+  background: 0 0;
+}
+
+// 滚动的滑块
+::-webkit-scrollbar-thumb {
+  background-color: #b4c7d0;
+  border: 3px solid transparent;
+  background-clip: padding-box;
+  border-radius: 5px;
 }

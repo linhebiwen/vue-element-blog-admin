@@ -23,6 +23,7 @@ import blogHeader from '@/components/header'
 import breadcrumb from '@/components/breadcrumb'
 
 import { mapGetters } from 'vuex'
+import { USER_INFO } from '@/api/constant'
 
 export default {
   components: {
@@ -37,8 +38,29 @@ export default {
     }
   },
 
+  created () {
+    this.getUserInfo()
+  },
+
   computed: {
     ...mapGetters(['getSidebar'])
+  },
+
+  methods: {
+    getUserInfo () {
+      let data = {
+        uid: window.localStorage.getItem('uid'),
+        autoLogin: window.localStorage.getItem('autoLogin')
+      }
+      window.$post(USER_INFO, data).then(res => {
+        if (res && res.code === 0) {
+          window.localStorage.setItem('uid', res.data.uid)
+          window.localStorage.setItem('nickname', res.data.nickname ? res.data.nickname : res.data.username)
+        } else {
+          this.$router.push({ path: '/login' })
+        }
+      })
+    }
   }
 }
 </script>

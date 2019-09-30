@@ -1,8 +1,22 @@
 <template>
   <div class="login-warpper">
-    <vue-particles color="#E0FFFF" :particleOpacity="0.7" :particlesNumber="100" shapeType="circle" :particleSize="4"
-      linesColor="#47CD88" :linesWidth="1" :lineLinked="false" :lineOpacity="0" :linesDistance="150" :moveSpeed="3"
-      :hoverEffect="false" hoverMode="grab" :clickEffect="true" clickMode="remove">
+    <vue-particles
+      color="#E0FFFF"
+      :particleOpacity="0.7"
+      :particlesNumber="100"
+      shapeType="circle"
+      :particleSize="4"
+      linesColor="#47CD88"
+      :linesWidth="1"
+      :lineLinked="false"
+      :lineOpacity="0"
+      :linesDistance="150"
+      :moveSpeed="3"
+      :hoverEffect="false"
+      hoverMode="grab"
+      :clickEffect="true"
+      clickMode="remove"
+    >
     </vue-particles>
     <div class="login-form">
       <el-form ref="form" :model="form" :rules="rules">
@@ -14,8 +28,12 @@
           <el-input v-model="form.password" type="password" placeholder="请输入密码" prefix-icon="el-icon-lock"></el-input>
         </el-form-item>
         <el-form-item prop="captcha">
-          <el-input v-model="form.captcha" type="text" placeholder="验证码"
-            style="width: 200px; marginRight: 20px; vertical-align: middle;">
+          <el-input
+            v-model="form.captcha"
+            type="text"
+            placeholder="验证码"
+            style="width: 200px; marginRight: 20px; vertical-align: middle;"
+          >
           </el-input>
           <el-button type="text" class="svg-captcha" @click="getCaptcha">
             <span v-html="svgCaptcha"></span>
@@ -79,8 +97,9 @@ export default {
           }
           window.$post(USER_LOGIN, data).then(res => {
             if (res && res.code === 0) {
-              this.$message.success(`欢迎${res.data.username}回家`)
-              window.sessionStorage.setItem('username', res.data.nickname ? res.data.nickname : res.data.username)
+              window.localStorage.setItem('uid', res.data._id)
+              window.localStorage.setItem('nickname', res.data.nickname ? res.data.nickname : res.data.username)
+              window.localStorage.setItem('autoLogin', this.autoLogin)
               Cookies.remove('captcha')
               this.$router.push({ path: '/', name: 'home' })
             }
@@ -108,7 +127,7 @@ export default {
   position: absolute;
   height: 100%;
   width: 100%;
-  background: url("../assets/img/bg.jpg") no-repeat fixed center;
+  background: url('../assets/img/bg.jpg') no-repeat fixed center;
   background-size: 100% 100%;
 
   #particles-js {

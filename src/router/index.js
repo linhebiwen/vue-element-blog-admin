@@ -192,8 +192,9 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  if (to.path === '/login') {
+  if (to.path === '/login' || to.path === '/register') {
     Cookies.remove('token')
+    window.localStorage.clear()
     next()
   } else {
     if (Cookies.get('token')) {

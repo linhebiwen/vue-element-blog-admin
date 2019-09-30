@@ -1,11 +1,17 @@
 <template>
   <div class="header-wrapper">
-    <el-button type="text" icon="el-icon-s-fold" style="font-size: 24px; color: #606266"
-      :class="{ isCollapse: changeBarDirection }" @click="handleLeftMenu">
+    <el-button
+      type="text"
+      icon="el-icon-s-fold"
+      style="font-size: 24px; color: #606266"
+      :class="{ isCollapse: changeBarDirection }"
+      @click="handleLeftMenu"
+    >
     </el-button>
     <div class="person-wrapper">
-      <span>您好,
-        <span class="username">{{ username }}</span>
+      <span>
+        您好,
+        <span class="nickname">{{ nickname }}</span>
       </span>
       <el-dropdown trigger="hover" @command="handleCommand">
         <span class="el-dropdown-link">
@@ -24,22 +30,38 @@
 </template>
 
 <script>
+import { USER_LOGOUT } from '@/api/constant'
+
 export default {
   data () {
     return {
       changeBarDirection: false,
-      username: window.sessionStorage.getItem('username')
+      nickname: window.localStorage.getItem('nickname')
     }
   },
 
   methods: {
+    // 单击左侧导航收缩展开按钮
     handleLeftMenu () {
       this.changeBarDirection = !this.changeBarDirection
       this.$store.dispatch('SET_COLLAPSE')
     },
 
     handleCommand (command) {
-      console.log(command)
+      switch (command) {
+        case 'logout':
+          this.$confirm('确认退出登录吗', '退出登录', {
+            type: 'warning'
+          }).then(() => {
+            window.$post(USER_LOGOUT).then(res => {
+              if (res && res.code === 0) {
+                window.localStorage.clear()
+                window.sessionStorage.clear()
+                this.$router.push({ path: '/login' })
+              }
+            })
+          })
+      }
     }
   }
 }
@@ -49,7 +71,7 @@ export default {
 .person-wrapper {
   float: right;
 
-  .username {
+  .nickname {
     color: #67c23a;
   }
 

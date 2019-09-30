@@ -44,6 +44,8 @@ instance.interceptors.response.use(response => {
   if (response.request.responseType === 'json') {
     if (response.data.code === 0) {
       return response.data
+    } else if (response.data.code === 1001 || response.data.code === 1002) {
+      window.location.href = '/login'
     } else {
       let err = {
         config: response.config,

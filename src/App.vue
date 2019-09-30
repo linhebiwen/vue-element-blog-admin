@@ -7,6 +7,7 @@
 <script>
 export default {
   name: 'app',
+
   mounted () {
     const script = document.createElement('script')
     script.type = 'text/javascript'
